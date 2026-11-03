@@ -1,76 +1,49 @@
 # micrograd
 
-<div align="center">
-  <p>
-    <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
-    <img src="https://img.shields.io/badge/Graphviz-5C3EE8?style=for-the-badge&logo=graphviz&logoColor=white" alt="Graphviz" />
-    <img src="https://img.shields.io/badge/Pytest-0A9EDC?style=for-the-badge&logo=pytest&logoColor=white" alt="Pytest" />
-  </p>
-</div>
+A scalar autograd engine and the neural network library built on top of it, in
+about a thousand lines of Python. It follows Andrej Karpathy's micrograd
+lectures and exists to make reverse-mode autodiff readable end to end.
 
-micrograd is a tiny, scalar-valued autograd engine with a clean, educational PyTorch-like API. It implements backpropagation (reverse-mode autodiff) over a dynamically constructed directed acyclic graph (DAG), supporting modular neural network building blocks like Neurons, Layers, and Multi-Layer Perceptrons (MLPs).
+## What it does
 
-## Features
+- Tracks every operation on a `Value` node, then walks the resulting graph in
+  topological order to compute exact gradients from `.backward()`.
+- Covers the scalar operators (`+ - * / **`, unary negation) and the activations
+  (`relu`, `tanh`, `exp`), each with its own local gradient rule.
+- Builds `Neuron`, `Layer`, and `MLP` on top of `Value`, so a small network is
+  the same graph as a single addition.
+- Renders the graph with Graphviz, showing values, operations, and the gradients
+  each node received.
+- Ships 100 pytest functions covering operator edge cases, gradient
+  accumulation, and network integration.
 
-- **Scalar Autograd Core**: Implements a custom `Value` class that tracks computational history (using a set of child nodes, operation markers, and backpropagation closures) and computes gradients dynamically.
-- **Topological DAG Sorting**: Computes exact reverse-mode derivatives by automatically sorting the mathematical DAG in topological order during the `.backward()` trigger.
-- **Extended Math Operators**: Supports comprehensive scalar arithmetic (`+`, `-`, `*`, `/`, custom powers `**`, unary negation) and activation functions (`relu()`, `tanh()`, `exp()`) with localized gradient rules.
-- **Neural Network Library**:
-  - **`Neuron`**: Models a single node with randomized weights and biases, supporting `.tanh()` activations.
-  - **`Layer`**: Organizes a collection of parallel neurons, returning flat scalar outputs or lists of outputs.
-  - **`MLP`**: Constructs sequential layers of parameterized dimensions with quick parameter access and zero-gradient resets.
-- **Visual Graph Generation**: Employs Graphviz bindings to render the computational flow, displaying node values, operations, and exact backpropagated gradients in real time.
-- **Exhaustive Testing**: Over 40 unit and integration tests written in `pytest` verifying boundary math conditions, edge cases, gradient accumulations, and network integration pipelines.
+## Run it
 
-## Tech Stack
-
-- **Core Engine:** Python (Standard Library, Math, Random)
-- **Visualization:** Graphviz (`graphviz` library)
-- **Unit Testing:** Pytest
-
-## Project Structure
-
-```text
-├── micrograd/
-│   ├── engine/
-│   │   ├── value.py        # Core scalar tracking and operator gradients
-│   │   ├── neuron.py       # Neuron model class with weights, bias, and activations
-│   │   ├── layer.py        # Layer organization representing multiple Neurons
-│   │   └── mlp.py          # Sequential Layer orchestrator with helper utilities
-│   └── utils/
-│       └── graph.py        # Graphviz DAG generator and renderer
-├── tests/
-│   ├── test_value.py       # Core scalar, backward, and operations assertions
-│   ├── test_neuron.py      # Forward, backward, and boundary tests for Neurons
-│   └── test_layer.py       # Layer chaining, reproduction, and integration tests
-├── requirements.txt
-└── README.md
-```
-
-## Getting Started
-
-### Prerequisites
-- Python (v3.10+)
-- Graphviz binaries installed on your system path (necessary for generating DAG graphs)
-
-### Installation
-
-1. **Clone the repository:**
 ```bash
-git clone https://github.com/abderrahmenex86/micrograd.git
+git clone https://github.com/abderrahmenex86/micrograd
 cd micrograd
-```
-
-2. **Set up a virtual environment and install dependencies:**
-```bash
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate
 pip install -r requirements.txt
-```
-
-### Running Tests
-
-To run the complete test suite and assert mathematical accuracy across the engine:
-```bash
 pytest tests/
 ```
+
+Graphviz is only needed for the renderer, not for the engine or the tests, but
+install it if you want the graph images.
+
+## What is inside
+
+```text
+micrograd/engine/   value.py, neuron.py, layer.py, mlp.py
+micrograd/utils/    graph.py (Graphviz renderer)
+tests/              test_value.py, test_neuron.py, test_layer.py
+```
+
+## Limits
+
+Scalar only. There are no tensors and no vectorised operations, so it is far too
+slow for real training. That is the point: the engine exists to be read.
+
+## Stack
+
+Python 3.10+ · pytest · graphviz
