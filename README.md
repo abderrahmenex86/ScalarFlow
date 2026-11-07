@@ -1,4 +1,4 @@
-# micrograd
+# scalarflow
 
 I rebuilt Andrej Karpathy's micrograd to see reverse-mode autodiff end to end.
 Every operation on a `Value` records the local derivative it will need later,
@@ -77,8 +77,8 @@ gradient that reaches `z` is multiplied by the other operand on the way back._
 ## Run it
 
 ```bash
-git clone https://github.com/abderrahmenex86/micrograd
-cd micrograd
+git clone https://github.com/abderrahmenex86/scalarflow
+cd scalarflow
 python3 -m venv venv
 source venv/bin/activate
 python -m pip install pytest
