@@ -2,9 +2,9 @@ import random
 
 import pytest
 
-from micrograd.engine.layer import Layer
-from micrograd.engine.neuron import Neuron
-from micrograd.engine.value import Value
+from scalarflow.engine.layer import Layer
+from scalarflow.engine.neuron import Neuron
+from scalarflow.engine.value import Value
 
 
 class TestLayerCreation:

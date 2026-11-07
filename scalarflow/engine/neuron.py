@@ -1,6 +1,6 @@
 import random
 
-from micrograd.engine.value import Value
+from scalarflow.engine.value import Value
 
 
 class Neuron:

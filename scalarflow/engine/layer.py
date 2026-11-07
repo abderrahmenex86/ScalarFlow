@@ -1,4 +1,4 @@
-from micrograd.engine.neuron import Neuron
+from scalarflow.engine.neuron import Neuron
 
 
 class Layer:

@@ -7,7 +7,7 @@ engine and the renderer are 259 lines of Python; the 100 tests are another 951
 lines. There are no tensors and no framework in the gradient path.
 
 ```python
->>> from micrograd.engine.value import Value
+>>> from scalarflow.engine.value import Value
 >>> x = Value(2.0, label="x")
 >>> y = Value(3.0, label="y")
 >>> z = x * y
@@ -46,23 +46,23 @@ gradient that reaches `z` is multiplied by the other operand on the way back._
 
 | Piece | File | What it does |
 | --- | --- | --- |
-| `Value` | `micrograd/engine/value.py` | Wraps a scalar, stores its gradient, and records the operation and parents that produced it. |
-| Operators | `micrograd/engine/value.py` | `+`, `-`, `*`, `/`, `**`, unary negation, and reflected forms for `+`, `-`, `*`, and `/`. |
-| Activations | `micrograd/engine/value.py` | `relu`, `tanh`, and `exp`, each with its own local gradient rule. |
-| `Neuron` | `micrograd/engine/neuron.py` | Weighted sum plus bias through `tanh`, with `parameters()` and `zero_grad()`. |
-| `Layer` | `micrograd/engine/layer.py` | A list of neurons over the same inputs. |
-| `MLP` | `micrograd/engine/mlp.py` | A stack of layers sized from a list, such as `MLP(3, [4, 4, 1])`. |
-| Renderer | `micrograd/plot/graph.py` | Walks `_prev` and emits a Graphviz digraph labelled with the node label, data, and gradient. |
+| `Value` | `scalarflow/engine/value.py` | Wraps a scalar, stores its gradient, and records the operation and parents that produced it. |
+| Operators | `scalarflow/engine/value.py` | `+`, `-`, `*`, `/`, `**`, unary negation, and reflected forms for `+`, `-`, `*`, and `/`. |
+| Activations | `scalarflow/engine/value.py` | `relu`, `tanh`, and `exp`, each with its own local gradient rule. |
+| `Neuron` | `scalarflow/engine/neuron.py` | Weighted sum plus bias through `tanh`, with `parameters()` and `zero_grad()`. |
+| `Layer` | `scalarflow/engine/layer.py` | A list of neurons over the same inputs. |
+| `MLP` | `scalarflow/engine/mlp.py` | A stack of layers sized from a list, such as `MLP(3, [4, 4, 1])`. |
+| Renderer | `scalarflow/plot/graph.py` | Walks `_prev` and emits a Graphviz digraph labelled with the node label, data, and gradient. |
 
 ## Reading order
 
 | Order | File | Concept |
 | --- | --- | --- |
-| 1 | `micrograd/engine/value.py` | The `Value` node, the operator methods, local gradients, and `backward()`. |
-| 2 | `micrograd/engine/neuron.py` | Turning a weighted sum into a `Value` expression. |
-| 3 | `micrograd/engine/layer.py` | Collecting neurons and flattening their parameters. |
-| 4 | `micrograd/engine/mlp.py` | Chaining layers and checking the size list. |
-| 5 | `micrograd/plot/graph.py` | Reading the graph structure through `_prev`. |
+| 1 | `scalarflow/engine/value.py` | The `Value` node, the operator methods, local gradients, and `backward()`. |
+| 2 | `scalarflow/engine/neuron.py` | Turning a weighted sum into a `Value` expression. |
+| 3 | `scalarflow/engine/layer.py` | Collecting neurons and flattening their parameters. |
+| 4 | `scalarflow/engine/mlp.py` | Chaining layers and checking the size list. |
+| 5 | `scalarflow/plot/graph.py` | Reading the graph structure through `_prev`. |
 | 6 | `tests/` | The behaviour the engine is expected to keep. |
 
 ## Requirements
@@ -117,8 +117,8 @@ dot -V
 Then build a graph and render it:
 
 ```python
-from micrograd.engine.value import Value
-from micrograd.plot.graph import draw_graph
+from scalarflow.engine.value import Value
+from scalarflow.plot.graph import draw_graph
 
 a = Value(2.0, label="a")
 b = Value(3.0, label="b")
@@ -159,11 +159,11 @@ flowchart LR
 ```
 
 ```text
-micrograd/engine/value.py    scalar autograd and operators
-micrograd/engine/neuron.py   weighted sum, tanh, parameters
-micrograd/engine/layer.py    list of neurons
-micrograd/engine/mlp.py      stack of layers
-micrograd/plot/graph.py      Graphviz renderer
+scalarflow/engine/value.py   scalar autograd and operators
+scalarflow/engine/neuron.py  weighted sum, tanh, parameters
+scalarflow/engine/layer.py   list of neurons
+scalarflow/engine/mlp.py     stack of layers
+scalarflow/plot/graph.py     Graphviz renderer
 tests/test_value.py          operator and gradient tests
 tests/test_neuron.py         neuron and activation tests
 tests/test_layer.py          layer and MLP integration tests

@@ -2,8 +2,8 @@ import random
 
 import pytest
 
-from micrograd.engine.neuron import Neuron
-from micrograd.engine.value import Value
+from scalarflow.engine.neuron import Neuron
+from scalarflow.engine.value import Value
 
 
 class TestNeuronCreation:
